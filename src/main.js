@@ -1,19 +1,19 @@
-import './styles/main.css';
-import { renderLogin } from './pages/login.js';
-import { renderInicio } from './pages/inicio.js';
-import { getUsuario, rutaInicio, rolDeRuta } from './session.js';
+import "./styles/main.css";
+import { renderLogin } from "./pages/login/login.js";
+import { renderInicio } from "./pages/inicio/inicio.js";
+import { getUsuario, rutaInicio, rolDeRuta } from "./session.js";
 
-const app = document.getElementById('app');
+const app = document.getElementById("app");
 
 // Router minimalista basado en el hash
 function router() {
-  const hash    = window.location.hash || '#/login';
+  const hash = window.location.hash || "#/login";
   const usuario = getUsuario();
 
   // Sin sesión solo se puede ver el login
   if (!usuario) {
-    if (hash !== '#/login') {
-      window.location.hash = '#/login';
+    if (hash !== "#/login") {
+      window.location.hash = "#/login";
       return;
     }
     renderLogin(app);
@@ -29,5 +29,5 @@ function router() {
   renderInicio(app, usuario);
 }
 
-window.addEventListener('hashchange', router);
+window.addEventListener("hashchange", router);
 router();

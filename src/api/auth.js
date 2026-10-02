@@ -53,16 +53,18 @@ export async function login(matricula, nip) {
  */
 export async function logout() {
   const token = localStorage.getItem('token');
-  if (!token) return;
+  try {
+    if (!token) return;
 
-  await fetch(`${API_BASE}/logout`, {
-    method:  'POST',
-    headers: {
-      'Accept':        'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-  });
-
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+    await fetch(`${API_BASE}/logout`, {
+      method:  'POST',
+      headers: {
+        'Accept':        'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+  } finally {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
 }

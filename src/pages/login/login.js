@@ -1,6 +1,8 @@
-﻿import { login } from '../api/auth.js';
-import { rutaInicio } from '../session.js';
-import logoAula from '../assets/logo-aula-uas.png';
+﻿import { login } from "../../api/auth.js";
+import { rutaInicio } from "../../session.js";
+import logoAula from "../../assets/logo-aula-uas.png";
+
+import "./login.css";
 
 export function renderLogin(container) {
   container.innerHTML = `
@@ -84,20 +86,22 @@ export function renderLogin(container) {
 }
 
 function attachLoginHandlers() {
-  const form      = document.getElementById('login-form');
-  const btnSubmit = document.getElementById('btn-submit');
-  const alertApi  = document.getElementById('alert-api');
-  const alertMsg  = document.getElementById('alert-api-msg');
+  const form = document.getElementById("login-form");
+  const btnSubmit = document.getElementById("btn-submit");
+  const alertApi = document.getElementById("alert-api");
+  const alertMsg = document.getElementById("alert-api-msg");
 
-  ['matricula', 'nip'].forEach(field => {
-    document.getElementById(field).addEventListener('input', () => clearFieldError(field));
+  ["matricula", "nip"].forEach((field) => {
+    document
+      .getElementById(field)
+      .addEventListener("input", () => clearFieldError(field));
   });
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const matricula = document.getElementById('matricula').value.trim();
-    const nip       = document.getElementById('nip').value;
+    const matricula = document.getElementById("matricula").value.trim();
+    const nip = document.getElementById("nip").value;
 
     if (!validateForm(matricula, nip)) return;
 
@@ -107,11 +111,10 @@ function attachLoginHandlers() {
     try {
       const data = await login(matricula, nip);
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user',  JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       window.location.hash = rutaInicio(data.user.rol);
-
     } catch (err) {
       showAlert(err.message);
     } finally {
@@ -125,38 +128,38 @@ function attachLoginHandlers() {
     let valid = true;
 
     if (!/^\d+$/.test(matricula)) {
-      setFieldError('matricula');
+      setFieldError("matricula");
       valid = false;
     }
     if (!nip) {
-      setFieldError('nip');
+      setFieldError("nip");
       valid = false;
     }
     return valid;
   }
 
   function setFieldError(field) {
-    document.getElementById(field).classList.add('is-error');
-    document.getElementById(`error-${field}`).classList.add('visible');
+    document.getElementById(field).classList.add("is-error");
+    document.getElementById(`error-${field}`).classList.add("visible");
   }
 
   function clearFieldError(field) {
-    document.getElementById(field).classList.remove('is-error');
-    document.getElementById(`error-${field}`).classList.remove('visible');
+    document.getElementById(field).classList.remove("is-error");
+    document.getElementById(`error-${field}`).classList.remove("visible");
     hideAlert();
   }
 
   function setLoading(state) {
     btnSubmit.disabled = state;
-    btnSubmit.classList.toggle('loading', state);
+    btnSubmit.classList.toggle("loading", state);
   }
 
-  function showAlert(message, type = 'error') {
+  function showAlert(message, type = "error") {
     alertApi.className = `alert alert-${type} visible`;
     alertMsg.textContent = message;
   }
 
   function hideAlert() {
-    alertApi.classList.remove('visible');
+    alertApi.classList.remove("visible");
   }
 }
